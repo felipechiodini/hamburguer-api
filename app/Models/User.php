@@ -42,6 +42,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function subscription()
+    {
+        return $this->hasOne(UserSubscription::class);
+    }
+
     public function stores()
     {
         return $this->hasMany(UserStore::class);

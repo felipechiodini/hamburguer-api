@@ -2,21 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\PlanPrice;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserSubscriptionFactory extends Factory
 {
 
     public function definition()
     {
+        $planPrice = PlanPrice::all()->random();
+
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => Hash::make('132567'),
-            'remember_token' => Str::random(10),
+            'plan_price_id' => $planPrice->id,
+            'start_at' => now()->toDateTimeString(),
+            'expire_at' => now()->addMonths($planPrice->recurence)->toDateTimeString(),
         ];
     }
 
