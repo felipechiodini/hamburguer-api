@@ -4,13 +4,13 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CardFactory extends Factory
+class PlanFactory extends Factory
 {
 
     public function definition()
     {
         return [
-            'number' => $this->faker->numberBetween(100,999),
+            //
         ];
     }
 

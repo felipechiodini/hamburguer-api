@@ -14,20 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('store_cards', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('number');
             $table->timestamps();
         });
 
-        Schema::create('combos', function (Blueprint $table) {
+        Schema::create('store_combos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('combos_product_id_foreign');
+            $table->unsignedBigInteger('product_id')->index('store_combos_product_id_foreign');
             $table->string('name');
             $table->timestamps();
         });
 
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('store_customers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('document');
@@ -42,31 +42,41 @@ return new class extends Migration
             $table->timestamps();
         });
 
+
+        Schema::create('user_stores', function (Blueprint $table) {
+            $table->char('id', 36)->primary();
+            $table->unsignedBigInteger('user_id')->index('user_stores_user_id_foreign');
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('store_orders', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('store_id')->nullable()->references('id')->on('user_stores');
+            $table->foreignId('store_card_id')->nullable()->references('id')->on('store_cards');
+            $table->enum('type', ['balcony', 'delivery']);
+            $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
+            $table->timestamps();
+        });
+
+
+
+        Schema::create('order_payments', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('store_order_id')->references('id')->on('store_orders');
+            $table->double('value');
+            $table->timestamps();
+        });
+
+
         Schema::create('order_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('order_addresses_order_id_foreign');
+            $table->foreignId('store_order_id')->references('id')->on('store_orders');
             $table->string('name');
             $table->string('cep');
             $table->string('street');
             $table->string('city');
             $table->string('number');
-            $table->timestamps();
-        });
-
-        Schema::create('order_payments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('order_payments_order_id_foreign');
-            $table->double('value', 8, 2);
-            $table->timestamps();
-        });
-
-        Schema::create('orders', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('card_id')->nullable()->index('orders_card_id_foreign');
-            $table->unsignedBigInteger('customer_id')->nullable()->index('orders_customer_id_foreign');
-            $table->unsignedBigInteger('order_address_id')->nullable()->index('orders_order_address_id_foreign');
-            $table->enum('type', ['balcony', 'delivery']);
-            $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
             $table->timestamps();
         });
 
@@ -80,8 +90,15 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->double('value', 8, 2);
             $table->text('description');
+            $table->timestamps();
+        });
+
+        Schema::create('plan_prices', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('plan_id')->references('id')->on('plans');
+            $table->double('value');
+            $table->integer('recurence');
             $table->timestamps();
         });
 
@@ -158,22 +175,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('sub_order_has_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('sub_order_has_products_order_id_foreign');
-            $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
-            $table->smallInteger('quantity');
-            $table->double('value', 8, 2);
-            $table->text('observation');
-            $table->timestamps();
-        });
+        // Schema::create('sub_order_has_products', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->unsignedBigInteger('order_id')->index('sub_order_has_products_order_id_foreign');
+        //     $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
+        //     $table->smallInteger('quantity');
+        //     $table->double('value', 8, 2);
+        //     $table->text('observation');
+        //     $table->timestamps();
+        // });
 
-        Schema::create('sub_orders', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->index('sub_orders_order_id_foreign');
-            $table->unsignedBigInteger('waiter_id')->index('sub_orders_waiter_id_foreign');
-            $table->timestamps();
-        });
+        // Schema::create('sub_orders', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->unsignedBigInteger('order_id')->index('sub_orders_order_id_foreign');
+        //     $table->unsignedBigInteger('waiter_id')->index('sub_orders_waiter_id_foreign');
+        //     $table->timestamps();
+        // });
 
         Schema::create('user_store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -191,18 +208,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('user_stores', function (Blueprint $table) {
-            $table->char('id', 36)->primary();
-            $table->unsignedBigInteger('user_id')->index('user_stores_user_id_foreign');
-            $table->string('name');
-            $table->timestamps();
-        });
+
 
         Schema::create('user_subscriptions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->index('user_subscriptions_user_id_foreign');
-            $table->unsignedBigInteger('plan_id')->index('user_subscriptions_plan_id_foreign');
-            $table->enum('status', ['active', 'canceled', 'expired']);
+            $table->foreignId('plan_price_id')->references('id')->on('plan_prices');
+            $table->timestamp('start_at');
             $table->timestamp('expire_at');
             $table->timestamps();
         });
@@ -213,23 +225,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('combos', function (Blueprint $table) {
+        Schema::table('store_combos', function (Blueprint $table) {
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('order_addresses', function (Blueprint $table) {
-            $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
+        // Schema::table('order_payments', function (Blueprint $table) {
+        //     $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        // });
 
-        Schema::table('order_payments', function (Blueprint $table) {
-            $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('orders', function (Blueprint $table) {
-            $table->foreign(['card_id'])->references(['id'])->on('cards')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['customer_id'])->references(['id'])->on('customers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['order_address_id'])->references(['id'])->on('order_addresses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
+        // Schema::table('orders', function (Blueprint $table) {
+        //     $table->foreignId('store_card_id')->references('id')->on('store_cards');
+        //     $table->foreign(['customer_id'])->references(['id'])->on('store_customers')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        //     $table->foreign(['order_address_id'])->references(['id'])->on('order_addresses')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        // });
 
         Schema::table('plan_has_modules', function (Blueprint $table) {
             $table->foreign(['module_id'])->references(['id'])->on('modules')->onUpdate('NO ACTION')->onDelete('NO ACTION');
@@ -268,15 +276,15 @@ return new class extends Migration
             $table->foreign(['product_category_id'])->references(['id'])->on('product_categories')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('sub_order_has_products', function (Blueprint $table) {
-            $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
+        // Schema::table('sub_order_has_products', function (Blueprint $table) {
+        //     $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        //     $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        // });
 
-        Schema::table('sub_orders', function (Blueprint $table) {
-            $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['waiter_id'])->references(['id'])->on('waiters')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
+        // Schema::table('sub_orders', function (Blueprint $table) {
+        //     $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        //     $table->foreign(['waiter_id'])->references(['id'])->on('waiters')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        // });
 
         Schema::table('user_store_configurations', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
@@ -291,156 +299,8 @@ return new class extends Migration
         });
 
         Schema::table('user_subscriptions', function (Blueprint $table) {
-            $table->foreign(['plan_id'])->references(['id'])->on('plans')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->foreign(['user_id'])->references(['id'])->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('user_subscriptions', function (Blueprint $table) {
-            $table->dropForeign('user_subscriptions_plan_id_foreign');
-            $table->dropForeign('user_subscriptions_user_id_foreign');
-        });
-
-        Schema::table('user_stores', function (Blueprint $table) {
-            $table->dropForeign('user_stores_user_id_foreign');
-        });
-
-        Schema::table('user_store_schedules', function (Blueprint $table) {
-            $table->dropForeign('user_store_schedules_user_store_id_foreign');
-        });
-
-        Schema::table('user_store_configurations', function (Blueprint $table) {
-            $table->dropForeign('user_store_configurations_user_store_id_foreign');
-        });
-
-        Schema::table('sub_orders', function (Blueprint $table) {
-            $table->dropForeign('sub_orders_order_id_foreign');
-            $table->dropForeign('sub_orders_waiter_id_foreign');
-        });
-
-        Schema::table('sub_order_has_products', function (Blueprint $table) {
-            $table->dropForeign('sub_order_has_products_order_id_foreign');
-            $table->dropForeign('sub_order_has_products_product_id_foreign');
-        });
-
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign('products_product_category_id_foreign');
-        });
-
-        Schema::table('product_stocks', function (Blueprint $table) {
-            $table->dropForeign('product_stocks_product_id_foreign');
-        });
-
-        Schema::table('product_stock_exit', function (Blueprint $table) {
-            $table->dropForeign('product_stock_exit_product_stock_id_foreign');
-        });
-
-        Schema::table('product_stock_entry', function (Blueprint $table) {
-            $table->dropForeign('product_stock_entry_product_stock_id_foreign');
-        });
-
-        Schema::table('product_replacements', function (Blueprint $table) {
-            $table->dropForeign('product_replacements_product_id_foreign');
-        });
-
-        Schema::table('product_prices', function (Blueprint $table) {
-            $table->dropForeign('product_prices_product_id_foreign');
-        });
-
-        Schema::table('product_price_promotions', function (Blueprint $table) {
-            $table->dropForeign('product_price_promotions_price_id_foreign');
-        });
-
-        Schema::table('product_additionals', function (Blueprint $table) {
-            $table->dropForeign('product_additionals_product_id_foreign');
-        });
-
-        Schema::table('plan_has_modules', function (Blueprint $table) {
-            $table->dropForeign('plan_has_modules_module_id_foreign');
-            $table->dropForeign('plan_has_modules_plan_id_foreign');
-        });
-
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropForeign('orders_card_id_foreign');
-            $table->dropForeign('orders_customer_id_foreign');
-            $table->dropForeign('orders_order_address_id_foreign');
-        });
-
-        Schema::table('order_payments', function (Blueprint $table) {
-            $table->dropForeign('order_payments_order_id_foreign');
-        });
-
-        Schema::table('order_addresses', function (Blueprint $table) {
-            $table->dropForeign('order_addresses_order_id_foreign');
-        });
-
-        Schema::table('combos', function (Blueprint $table) {
-            $table->dropForeign('combos_product_id_foreign');
-        });
-
-        Schema::dropIfExists('waiters');
-
-        Schema::dropIfExists('users');
-
-        Schema::dropIfExists('user_subscriptions');
-
-        Schema::dropIfExists('user_stores');
-
-        Schema::dropIfExists('user_store_schedules');
-
-        Schema::dropIfExists('user_store_configurations');
-
-        Schema::dropIfExists('sub_orders');
-
-        Schema::dropIfExists('sub_order_has_products');
-
-        Schema::dropIfExists('products');
-
-        Schema::dropIfExists('product_stocks');
-
-        Schema::dropIfExists('product_stock_exit');
-
-        Schema::dropIfExists('product_stock_entry');
-
-        Schema::dropIfExists('product_replacements');
-
-        Schema::dropIfExists('product_prices');
-
-        Schema::dropIfExists('product_price_promotions');
-
-        Schema::dropIfExists('product_categories');
-
-        Schema::dropIfExists('product_additionals');
-
-        Schema::dropIfExists('plans');
-
-        Schema::dropIfExists('plan_has_modules');
-
-        Schema::dropIfExists('personal_access_tokens');
-
-        Schema::dropIfExists('password_resets');
-
-        Schema::dropIfExists('orders');
-
-        Schema::dropIfExists('order_payments');
-
-        Schema::dropIfExists('order_addresses');
-
-        Schema::dropIfExists('modules');
-
-        Schema::dropIfExists('failed_jobs');
-
-        Schema::dropIfExists('customers');
-
-        Schema::dropIfExists('combos');
-
-        Schema::dropIfExists('cards');
-    }
 };
