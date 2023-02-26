@@ -20,6 +20,14 @@ class Teste extends Migration
             $table->timestamps();
         });
 
+        Schema::create('store_schedules', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('store_id')->references('id')->on('stores');
+            $table->timestamp('open_at');
+            $table->timestamp('close_at');
+            $table->timestamps();
+        });
+
         Schema::create('store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('store_id')->references('id')->on('stores');

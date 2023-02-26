@@ -50,8 +50,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('card_id')->index('orders_card_id_foreign');
             $table->unsignedBigInteger('customer_id')->nullable()->index('orders_customer_id_foreign');
-            $table->enum('type', ['', 'delivery']);
-            $table->enum('status', ['opened', 'aceppted', 'closed']);
+            $table->enum('type', ['balcony', 'delivery']);
+            $table->enum('status', ['pending', 'aceppted', 'closed']);
             $table->timestamps();
         });
 
