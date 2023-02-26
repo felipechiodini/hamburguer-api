@@ -13,4 +13,25 @@ class OrderController extends Controller
         return response()->json(Order::all());
     }
 
+    public function store(Request $request)
+    {
+        Order::create([
+            'type' => 'balcony',
+            'status' => 'pending',
+        ]);
+    }
+
+    public function setStatus(Order $order, Request $request)
+    {
+        $request->validate([
+            'status' => 'in:pending,canceled'
+        ]);
+
+        $order->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['message' => 'Sucesso!']);
+    }
+
 }

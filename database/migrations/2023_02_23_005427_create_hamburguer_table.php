@@ -48,10 +48,11 @@ return new class extends Migration
 
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('card_id')->index('orders_card_id_foreign');
+            $table->unsignedBigInteger('card_id')->nullable()->index('orders_card_id_foreign');
             $table->unsignedBigInteger('customer_id')->nullable()->index('orders_customer_id_foreign');
+            $table->foreignId('order_address_id')->nullable()->references('id')->on('order_addresses');
             $table->enum('type', ['balcony', 'delivery']);
-            $table->enum('status', ['pending', 'aceppted', 'closed']);
+            $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
             $table->timestamps();
         });
 

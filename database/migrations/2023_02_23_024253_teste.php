@@ -13,24 +13,24 @@ class Teste extends Migration
      */
     public function up()
     {
-        Schema::create('stores', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('user_stores', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('name');
             $table->timestamps();
         });
 
-        Schema::create('store_schedules', function (Blueprint $table) {
+        Schema::create('user_store_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('stores');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
             $table->timestamp('open_at');
             $table->timestamp('close_at');
             $table->timestamps();
         });
 
-        Schema::create('store_configurations', function (Blueprint $table) {
+        Schema::create('user_store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_id')->references('id')->on('stores');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
             $table->timestamp('open_in');
             $table->timestamp('closed_in');
             $table->timestamps();
