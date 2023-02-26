@@ -10,6 +10,7 @@ class StoreCustomer extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_store_id',
         'name',
         'document',
         'cellphone'

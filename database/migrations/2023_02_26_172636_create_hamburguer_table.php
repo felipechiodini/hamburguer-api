@@ -27,13 +27,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('store_customers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('document');
-            $table->string('cellphone');
-            $table->timestamps();
-        });
 
         Schema::create('modules', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -50,9 +43,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('store_customers', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
+            $table->string('name');
+            $table->string('document');
+            $table->string('cellphone');
+            $table->timestamps();
+        });
+
         Schema::create('store_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignUuid('store_id')->nullable()->references('id')->on('user_stores');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
             $table->foreignId('store_card_id')->nullable()->references('id')->on('store_cards');
             $table->enum('type', ['balcony', 'delivery']);
             $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');

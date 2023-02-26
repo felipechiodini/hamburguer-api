@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Card;
+use App\Models\StoreCard;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class StoreOrderFactory extends Factory
 {
@@ -12,8 +11,8 @@ class StoreOrderFactory extends Factory
     public function definition()
     {
         return [
-            'card_id' => Card::all('id')->random()->id,
-            'customer_id' => null,
+            'store_card_id' => StoreCard::all('id')->random()->id,
+            'store_customer_id' => null,
             'type' => 'balcony',
             'status' => 'pending',
         ];

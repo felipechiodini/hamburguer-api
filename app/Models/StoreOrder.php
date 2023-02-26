@@ -10,8 +10,8 @@ class StoreOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'card_id',
-        'customer_id',
+        'store_card_id',
+        'store_customer_id',
         'type',
         'status',
     ];
