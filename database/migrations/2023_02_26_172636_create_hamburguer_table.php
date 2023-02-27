@@ -210,8 +210,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
-
         Schema::create('user_subscriptions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->index('user_subscriptions_user_id_foreign');
@@ -221,8 +219,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('waiters', function (Blueprint $table) {
+        Schema::create('store_waiters', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
+            $table->boolean('active')->default(true);
             $table->string('name');
             $table->timestamps();
         });

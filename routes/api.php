@@ -18,5 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route::middleware('subscription.validate')->middleware('retrieveStore')->group(function() {
 
-Route::apiResource('order', 'OrderController');
+    Route::apiResource('order', 'OrderController');
+    Route::apiResource('waiter', 'StoreWaiterController');
+// });
