@@ -10,12 +10,17 @@ class StoreWaiter extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_store_id',
         'name'
     ];
 
-    public function scopeStore($query)
+    protected static function boot()
     {
-        return $query->where(request()->header('X-store-id'));
+        parent::boot();
+
+        static::addGlobalScope('store', function ($query) {
+            return $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
+        });
     }
 
 }

@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreCard extends Model
+class OrderSuborder extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_store_id',
-        'number'
-    ];
+    protected $table = 'order_suborders';
 }

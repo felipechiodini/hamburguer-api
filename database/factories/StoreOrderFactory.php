@@ -12,7 +12,6 @@ class StoreOrderFactory extends Factory
     {
         return [
             'store_card_id' => StoreCard::all('id')->random()->id,
-            'store_customer_id' => null,
             'type' => 'balcony',
             'status' => 'pending',
         ];
