@@ -13,4 +13,15 @@ class Plan extends Model
         'name',
         'description'
     ];
+
+    public function planPrice()
+    {
+        return $this->hasMany(PlanPrice::class);
+    }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, 'plan_has_modules');
+    }
+
 }

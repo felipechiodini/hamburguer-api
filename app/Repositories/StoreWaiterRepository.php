@@ -2,37 +2,37 @@
 
 namespace App\Repositories;
 
-use App\Models\StoreWaiter;
+use App\Models\Waiter;
 
-class StoreWaiterRepository
+class WaiterRepository
 {
     public function getAllWaiters()
     {
-        return StoreWaiter::store(request()->header('X-store-uuid'))->all();
+        return Waiter::store(request()->header('X-store-uuid'))->all();
     }
 
     public function getWaiterById($WaiterId)
     {
-        return StoreWaiter::findOrFail($WaiterId);
+        return Waiter::findOrFail($WaiterId);
     }
 
     public function deleteWaiter($WaiterId)
     {
-        StoreWaiter::destroy($WaiterId);
+        Waiter::destroy($WaiterId);
     }
 
     public function createWaiter(array $WaiterDetails)
     {
-        return StoreWaiter::create($WaiterDetails);
+        return Waiter::create($WaiterDetails);
     }
 
     public function updateWaiter($WaiterId, array $newDetails)
     {
-        return StoreWaiter::whereId($WaiterId)->update($newDetails);
+        return Waiter::whereId($WaiterId)->update($newDetails);
     }
 
     public function getFulfilledWaiters()
     {
-        return StoreWaiter::where('is_fulfilled', true);
+        return Waiter::where('is_fulfilled', true);
     }
 }

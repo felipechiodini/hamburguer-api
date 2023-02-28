@@ -15,8 +15,8 @@ class TableSubOrders extends Migration
     {
         Schema::create('sub_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('store_order_id')->references('id')->on('store_orders');
-            $table->foreignId('store_waiter_id')->nullable()->references('id')->on('store_waiters');
+            $table->foreignId('order_id')->references('id')->on('orders');
+            $table->foreignId('waiter_id')->nullable()->references('id')->on('waiters');
             $table->timestamps();
         });
 

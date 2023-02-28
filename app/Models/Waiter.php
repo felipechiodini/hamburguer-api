@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreWaiter extends Model
+class Waiter extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
+        'store_id',
         'name'
     ];
 
@@ -19,7 +19,7 @@ class StoreWaiter extends Model
         parent::boot();
 
         static::addGlobalScope('store', function ($query) {
-            return $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
+            return $query->where('store_id', request()->header(UserStore::HEADER_KEY));
         });
     }
 

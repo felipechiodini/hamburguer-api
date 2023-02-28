@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StoreWaiter;
+use App\Models\Waiter;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
 
-class StoreWaiterController extends Controller
+class WaiterController extends Controller
 {
 
     public function index()
     {
-        return response()->json(StoreWaiter::all());
+        return response()->json(Waiter::all());
     }
 
     public function store(Request $request)
@@ -20,8 +20,8 @@ class StoreWaiterController extends Controller
             'name' => 'required|string'
         ]);
 
-        $waiter = StoreWaiter::create([
-            'user_store_id'=> $request->header(UserStore::HEADER_KEY),
+        $waiter = Waiter::create([
+            'store_id'=> $request->header(UserStore::HEADER_KEY),
             'name' => $request->name
         ]);
 

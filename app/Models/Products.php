@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreCard extends Model
+class Products extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
-        'number'
+        'product_category_id',
+        'name',
+        'description'
     ];
+
 }

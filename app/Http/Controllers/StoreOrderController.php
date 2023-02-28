@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StoreOrder;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
-class StoreOrderController extends Controller
+class OrderController extends Controller
 {
 
     public function index()
     {
-        return response()->json(StoreOrder::all());
+        return response()->json(Order::with('card')->get());
     }
 
     public function store(Request $request)
@@ -19,7 +19,7 @@ class StoreOrderController extends Controller
             'store_card_id' => 'nullable|numeric|exists:waiters,id',
         ]);
 
-        StoreOrder::create([
+        Order::create([
             'store_card_id' => $request->store_card_id,
             'type' => 'balcony',
             'status' => 'pending',

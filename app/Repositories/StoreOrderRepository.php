@@ -3,39 +3,39 @@
 namespace App\Repositories;
 
 use App\Interfaces\OrderRepositoryInterface;
-use App\Models\StoreOrder;
+use App\Models\Order;
 
-class StoreOrderRepository implements OrderRepositoryInterface
+class OrderRepository implements OrderRepositoryInterface
 {
     private $store;
 
     public function getAllOrders()
     {
-        return StoreOrder::all();
+        return Order::all();
     }
 
     public function getOrderById($orderId)
     {
-        return StoreOrder::findOrFail($orderId);
+        return Order::findOrFail($orderId);
     }
 
     public function deleteOrder($orderId)
     {
-        StoreOrder::destroy($orderId);
+        Order::destroy($orderId);
     }
 
     public function createOrder(array $orderDetails)
     {
-        return StoreOrder::create($orderDetails);
+        return Order::create($orderDetails);
     }
 
     public function updateOrder($orderId, array $newDetails)
     {
-        return StoreOrder::whereId($orderId)->update($newDetails);
+        return Order::whereId($orderId)->update($newDetails);
     }
 
     public function getFulfilledOrders()
     {
-        return StoreOrder::where('is_fulfilled', true);
+        return Order::where('is_fulfilled', true);
     }
 }

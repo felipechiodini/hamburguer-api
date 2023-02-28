@@ -18,5 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('order', 'StoreOrderController');
-Route::apiResource('waiter', 'StoreWaiterController');
+Route::apiResource('order', 'OrderController');
+Route::apiResource('waiter', 'WaiterController');

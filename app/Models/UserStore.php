@@ -23,22 +23,22 @@ class UserStore extends Model
 
     public function customers()
     {
-        return $this->hasMany(StoreCustomer::class);
+        return $this->hasMany(Customer::class);
     }
 
     public function orders()
     {
-        return $this->hasMany(StoreOrder::class);
+        return $this->hasMany(Order::class);
     }
 
     public function waiters()
     {
-        return $this->hasMany(StoreWaiter::class);
+        return $this->hasMany(Waiter::class);
     }
 
     public function cards()
     {
-        return $this->hasMany(StoreCard::class);
+        return $this->hasMany(Card::class);
     }
 
 }

@@ -70,12 +70,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('product_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->timestamps();
-        });
-
         Schema::create('product_price_promotions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('price_id')->index('product_price_promotions_price_id_foreign');
@@ -126,65 +120,57 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('cards', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_category_id')->index('products_product_category_id_foreign');
-            $table->string('name');
-            $table->text('description');
-            $table->timestamps();
-        });
-
-        Schema::create('store_cards', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('store_cards_user_store_id_foreign');
+            $table->char('store_id', 36)->index('cards_store_id_foreign');
             $table->integer('number');
             $table->timestamps();
         });
 
-        Schema::create('store_combos', function (Blueprint $table) {
+        Schema::create('combos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('store_combos_product_id_foreign');
+            $table->unsignedBigInteger('product_id')->index('combos_product_id_foreign');
             $table->string('name');
             $table->timestamps();
         });
 
-        Schema::create('store_customers', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('store_customers_user_store_id_foreign');
+            $table->char('store_id', 36)->index('customers_store_id_foreign');
             $table->string('name');
             $table->string('document');
             $table->string('cellphone');
             $table->timestamps();
         });
 
-        Schema::create('store_orders', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('store_orders_user_store_id_foreign');
-            $table->unsignedBigInteger('store_card_id')->nullable()->index('store_orders_store_card_id_foreign');
+            $table->char('store_id', 36)->index('orders_store_id_foreign');
+            $table->unsignedBigInteger('store_card_id')->nullable()->index('orders_store_card_id_foreign');
             $table->enum('type', ['balcony', 'delivery']);
             $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
             $table->timestamps();
         });
 
-        Schema::create('store_waiters', function (Blueprint $table) {
+        Schema::create('waiters', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('store_waiters_user_store_id_foreign');
+            $table->char('store_id', 36)->index('waiters_store_id_foreign');
             $table->boolean('active')->default(true);
             $table->string('name');
             $table->timestamps();
         });
 
-        Schema::create('user_store_configurations', function (Blueprint $table) {
+        Schema::create('store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('user_store_configurations_user_store_id_foreign');
+            $table->char('store_id', 36)->index('store_configurations_store_id_foreign');
             $table->timestamp('open_in');
             $table->timestamp('closed_in');
             $table->timestamps();
         });
 
-        Schema::create('user_store_schedules', function (Blueprint $table) {
+        Schema::create('store_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('user_store_schedules_user_store_id_foreign');
+            $table->char('store_id', 36)->index('store_schedules_store_id_foreign');
             $table->timestamp('open_at');
             $table->timestamp('close_at');
             $table->timestamps();
@@ -193,6 +179,22 @@ return new class extends Migration
         Schema::create('user_stores', function (Blueprint $table) {
             $table->char('id', 36)->primary();
             $table->unsignedBigInteger('user_id')->index('user_stores_user_id_foreign');
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('store_id')->references('id')->on('user_stores');
+            $table->unsignedBigInteger('product_category_id')->index('products_product_category_id_foreign');
+            $table->string('name');
+            $table->text('description');
+            $table->timestamps();
+        });
+
+        Schema::create('product_categories', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('store_id')->references('id')->on('user_stores');
             $table->string('name');
             $table->timestamps();
         });
@@ -217,11 +219,11 @@ return new class extends Migration
         });
 
         Schema::table('order_addresses', function (Blueprint $table) {
-            $table->foreign(['store_order_id'])->references(['id'])->on('store_orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['store_order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('order_payments', function (Blueprint $table) {
-            $table->foreign(['store_order_id'])->references(['id'])->on('store_orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['store_order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('plan_has_modules', function (Blueprint $table) {
@@ -265,33 +267,33 @@ return new class extends Migration
             $table->foreign(['product_category_id'])->references(['id'])->on('product_categories')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('store_cards', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('cards', function (Blueprint $table) {
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('store_combos', function (Blueprint $table) {
+        Schema::table('combos', function (Blueprint $table) {
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('store_customers', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('store_orders', function (Blueprint $table) {
-            $table->foreign(['store_card_id'])->references(['id'])->on('store_cards')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreign(['store_card_id'])->references(['id'])->on('cards')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('store_waiters', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('waiters', function (Blueprint $table) {
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('user_store_configurations', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('store_configurations', function (Blueprint $table) {
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
-        Schema::table('user_store_schedules', function (Blueprint $table) {
-            $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        Schema::table('store_schedules', function (Blueprint $table) {
+            $table->foreign(['store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('user_stores', function (Blueprint $table) {
@@ -320,33 +322,33 @@ return new class extends Migration
             $table->dropForeign('user_stores_user_id_foreign');
         });
 
-        Schema::table('user_store_schedules', function (Blueprint $table) {
-            $table->dropForeign('user_store_schedules_user_store_id_foreign');
+        Schema::table('store_schedules', function (Blueprint $table) {
+            $table->dropForeign('store_schedules_store_id_foreign');
         });
 
-        Schema::table('user_store_configurations', function (Blueprint $table) {
-            $table->dropForeign('user_store_configurations_user_store_id_foreign');
+        Schema::table('store_configurations', function (Blueprint $table) {
+            $table->dropForeign('store_configurations_store_id_foreign');
         });
 
-        Schema::table('store_waiters', function (Blueprint $table) {
-            $table->dropForeign('store_waiters_user_store_id_foreign');
+        Schema::table('waiters', function (Blueprint $table) {
+            $table->dropForeign('waiters_store_id_foreign');
         });
 
-        Schema::table('store_orders', function (Blueprint $table) {
-            $table->dropForeign('store_orders_store_card_id_foreign');
-            $table->dropForeign('store_orders_user_store_id_foreign');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign('orders_store_card_id_foreign');
+            $table->dropForeign('orders_store_id_foreign');
         });
 
-        Schema::table('store_customers', function (Blueprint $table) {
-            $table->dropForeign('store_customers_user_store_id_foreign');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropForeign('customers_store_id_foreign');
         });
 
-        Schema::table('store_combos', function (Blueprint $table) {
-            $table->dropForeign('store_combos_product_id_foreign');
+        Schema::table('combos', function (Blueprint $table) {
+            $table->dropForeign('combos_product_id_foreign');
         });
 
-        Schema::table('store_cards', function (Blueprint $table) {
-            $table->dropForeign('store_cards_user_store_id_foreign');
+        Schema::table('cards', function (Blueprint $table) {
+            $table->dropForeign('cards_store_id_foreign');
         });
 
         Schema::table('products', function (Blueprint $table) {
@@ -404,19 +406,19 @@ return new class extends Migration
 
         Schema::dropIfExists('user_stores');
 
-        Schema::dropIfExists('user_store_schedules');
+        Schema::dropIfExists('store_schedules');
 
-        Schema::dropIfExists('user_store_configurations');
+        Schema::dropIfExists('store_configurations');
 
-        Schema::dropIfExists('store_waiters');
+        Schema::dropIfExists('waiters');
 
-        Schema::dropIfExists('store_orders');
+        Schema::dropIfExists('orders');
 
-        Schema::dropIfExists('store_customers');
+        Schema::dropIfExists('customers');
 
-        Schema::dropIfExists('store_combos');
+        Schema::dropIfExists('combos');
 
-        Schema::dropIfExists('store_cards');
+        Schema::dropIfExists('cards');
 
         Schema::dropIfExists('products');
 

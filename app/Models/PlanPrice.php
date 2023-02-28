@@ -14,4 +14,10 @@ class PlanPrice extends Model
         'value',
         'recurence',
     ];
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
 }

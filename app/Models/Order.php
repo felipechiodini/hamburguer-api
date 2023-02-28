@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StoreOrder extends Model
+class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_store_id',
+        'store_id',
         'store_card_id',
         'store_customer_id',
         'type',
@@ -22,13 +22,13 @@ class StoreOrder extends Model
         parent::boot();
 
         static::addGlobalScope('store', function ($query) {
-            return $query->where('user_store_id', request()->header(UserStore::HEADER_KEY));
+            return $query->where('store_id', request()->header(UserStore::HEADER_KEY));
         });
     }
 
     public function card()
     {
-        return $this->belongsTo(StoreCard::class);
+        return $this->belongsTo(Card::class);
     }
 
     public function subOrders()

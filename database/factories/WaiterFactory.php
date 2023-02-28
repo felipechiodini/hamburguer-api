@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class StoreWaiterFactory extends Factory
+class WaiterFactory extends Factory
 {
 
     public function definition()

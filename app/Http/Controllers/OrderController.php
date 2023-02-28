@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StoreOrder;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -10,12 +10,12 @@ class OrderController extends Controller
 
     public function index()
     {
-        return response()->json(StoreOrder::all());
+        return response()->json(Order::all());
     }
 
     public function store(Request $request)
     {
-        StoreOrder::create([
+        Order::create([
             'type' => 'balcony',
             'status' => 'pending',
         ]);
@@ -23,7 +23,7 @@ class OrderController extends Controller
         return response()->json(['message' => 'Pedido criado com sucesso!']);
     }
 
-    public function setStatus(StoreOrder $order, Request $request)
+    public function setStatus(Order $order, Request $request)
     {
         $request->validate([
             'status' => 'in:pending,canceled'

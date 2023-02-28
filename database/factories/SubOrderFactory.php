@@ -2,16 +2,16 @@
 
 namespace Database\Factories;
 
+use App\Models\Waiter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ModuleFactory extends Factory
+class SubOrderFactory extends Factory
 {
 
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
-            'description' => $this->faker->text()
+            // 'store_waiter_id' => Waiter::all('id')->random()->id
         ];
     }
 
