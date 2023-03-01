@@ -189,7 +189,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sub_order_id')->index('sub_order_has_products_sub_order_id_foreign');
             $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
             $table->double('value', 8, 2);
-            $table->double('amount', 8, 2);
+            $table->smallInteger('amount');
             $table->timestamps();
         });
 

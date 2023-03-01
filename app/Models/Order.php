@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Order\CalculateOrderTotalValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,13 +18,13 @@ class Order extends Model
         'status',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    protected $appends = [
+        'total'
+    ];
 
-        static::addGlobalScope('store', function ($query) {
-            return $query->where('store_id', request()->header(UserStore::HEADER_KEY));
-        });
+    public function getTotalAttribute()
+    {
+        return CalculateOrderTotalValue::order($this)->totalValue();
     }
 
     public function card()

@@ -21,7 +21,7 @@ class SubOrder extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'sub_order_has_products');
+        return $this->belongsToMany(Product::class, 'sub_order_has_products')->withPivot(['value', 'amount']);
     }
 
 }
