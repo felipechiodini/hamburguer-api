@@ -41,4 +41,14 @@ class UserStore extends Model
         return $this->hasMany(Card::class);
     }
 
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
 }

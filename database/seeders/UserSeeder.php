@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Card;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderPayment;
+use App\Models\Product;
+use App\Models\ProductPrice;
 use App\Models\SubOrder;
 use App\Models\User;
 use App\Models\UserStore;
@@ -19,9 +22,11 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::factory()
-            ->times(30)
+            ->count(5)
             ->has(
                 UserStore::factory()
+                    ->has(Category::factory()->count(10), 'categories')
+                    ->has(Product::factory()->has(ProductPrice::factory()->count(1), 'prices')->count(30), 'products')
                     ->has(Customer::factory()->count(30), 'customers')
                     ->has(Waiter::factory()->count(10), 'waiters')
                     ->has(Card::factory()->count(20), 'cards')

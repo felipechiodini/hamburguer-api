@@ -10,8 +10,8 @@ class SubOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'store_order_id',
-        'store_waiter_id'
+        'order_id',
+        'waiter_id'
     ];
 
     public function order()
@@ -21,7 +21,7 @@ class SubOrder extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Products::class, 'sub_order_has_products');
+        return $this->belongsToMany(Product::class, 'sub_order_has_products');
     }
 
 }
