@@ -12,7 +12,7 @@ class OrderFactory extends Factory
     {
         return [
             'store_card_id' => Card::all('id')->random()->id,
-            'type' => 'balcony',
+            'type' => 'withdrawal',
             'status' => 'pending',
         ];
     }

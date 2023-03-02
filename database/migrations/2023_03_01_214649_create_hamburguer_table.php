@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -74,8 +75,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('orders_user_store_id_foreign');
             $table->unsignedBigInteger('store_card_id')->nullable()->index('orders_store_card_id_foreign');
-            $table->enum('type', ['balcony', 'delivery']);
-            $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
+            $table->enum('type', ['withdrawal', 'delivery']);
+            $table->enum('status', ['pending', 'aceppted', 'delivered', 'canceled'])->default('pending');
             $table->timestamps();
         });
 
@@ -174,19 +175,43 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('product_photos', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->tinyInteger('order');
+            $table->timestamps();
+        });
+
         Schema::create('store_configurations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
-            $table->timestamp('open_in');
-            $table->timestamp('closed_in');
+            $table->text('warning')->nullable();
+            $table->boolean('allow_withdrawal')->nullable();
+            $table->integer('withdrawal_time')->nullable();
+            $table->integer('delivery_time')->nullable();
+            $table->float('minimum_order_value')->nullable();
+            $table->timestamp('open_in')->nullable();
+            $table->timestamp('closed_in')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('store_addresses', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
+            $table->string('street');
+            $table->string('number');
+            $table->string('district');
+            $table->string('city');
+            $table->string('state');
             $table->timestamps();
         });
 
         Schema::create('store_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_schedules_user_store_id_foreign');
-            $table->timestamp('open_at');
-            $table->timestamp('close_at');
+            $table->set('week_day', [Carbon::SUNDAY, Carbon::MONDAY, Carbon::TUESDAY, Carbon::WEDNESDAY, Carbon::THURSDAY, Carbon::FRIDAY, Carbon::SATURDAY]);
+            $table->timestamp('open_at')->nullable();
+            $table->timestamp('close_at')->nullable();
             $table->timestamps();
         });
 
@@ -196,6 +221,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
             $table->double('value', 8, 2);
             $table->smallInteger('amount');
+            $table->text('observation');
             $table->timestamps();
         });
 
