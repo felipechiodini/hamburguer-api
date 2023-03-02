@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductPrice extends Model
+class ProductPricePromotion extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
+        'product_price_id',
         'value',
         'start_date',
         'end_date',
@@ -20,10 +20,5 @@ class ProductPrice extends Model
         'start_date',
         'end_date'
     ];
-
-    public function promotions()
-    {
-        return $this->hasMany(ProductPricePromotion::class);
-    }
 
 }

@@ -65,6 +65,7 @@ return new class extends Migration
         Schema::create('order_payments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('order_id')->index('order_payments_order_id_foreign');
+            $table->string('payment_type_id')->index('order_payments_payment_type_id_foreign');
             $table->double('value');
             $table->timestamps();
         });
@@ -75,6 +76,12 @@ return new class extends Migration
             $table->unsignedBigInteger('store_card_id')->nullable()->index('orders_store_card_id_foreign');
             $table->enum('type', ['balcony', 'delivery']);
             $table->enum('status', ['pending', 'aceppted', 'closed'])->default('pending');
+            $table->timestamps();
+        });
+
+        Schema::create('payment_types', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('name');
             $table->timestamps();
         });
 
@@ -111,8 +118,7 @@ return new class extends Migration
 
         Schema::create('product_price_promotions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('price_id')->index('product_price_promotions_price_id_foreign');
-            $table->enum('type', ['percent', 'unit']);
+            $table->unsignedBigInteger('product_price_id')->index('product_price_promotions_product_price_id_foreign');
             $table->double('value', 8, 2);
             $table->timestamp('start_date');
             $table->timestamp('end_date');
@@ -256,6 +262,7 @@ return new class extends Migration
 
         Schema::table('order_payments', function (Blueprint $table) {
             $table->foreign(['order_id'])->references(['id'])->on('orders')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['payment_type_id'])->references(['id'])->on('payment_types')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('orders', function (Blueprint $table) {
@@ -277,7 +284,7 @@ return new class extends Migration
         });
 
         Schema::table('product_price_promotions', function (Blueprint $table) {
-            $table->foreign(['price_id'])->references(['id'])->on('product_prices')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['product_price_id'])->references(['id'])->on('product_prices')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('product_prices', function (Blueprint $table) {
@@ -401,7 +408,7 @@ return new class extends Migration
         });
 
         Schema::table('product_price_promotions', function (Blueprint $table) {
-            $table->dropForeign('product_price_promotions_price_id_foreign');
+            $table->dropForeign('product_price_promotions_product_price_id_foreign');
         });
 
         Schema::table('product_additionals', function (Blueprint $table) {
@@ -424,6 +431,7 @@ return new class extends Migration
 
         Schema::table('order_payments', function (Blueprint $table) {
             $table->dropForeign('order_payments_order_id_foreign');
+            $table->dropForeign('order_payments_payment_type_id_foreign');
         });
 
         Schema::table('order_addresses', function (Blueprint $table) {
@@ -485,6 +493,8 @@ return new class extends Migration
         Schema::dropIfExists('plan_has_modules');
 
         Schema::dropIfExists('personal_access_tokens');
+
+        Schema::dropIfExists('payment_types');
 
         Schema::dropIfExists('orders');
 

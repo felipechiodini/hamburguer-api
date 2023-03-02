@@ -18,9 +18,28 @@ class CalculatePriceProduct {
         return new static($product);
     }
 
+    private function price()
+    {
+        foreach ($this->product->prices as $price) {
+            if (now()->between($price->start_date, $price->end_date)) {
+                return $price;
+            }
+        }
+    }
+
     public function getCurrentPrice()
     {
-        return $this->product->prices[0]->value;
+        $price = $this->price();
+
+        if ($price->promotions !== null) {
+            foreach ($price->promotions as $promotion) {
+                if (now()->between($promotion->start_date, $promotion->end_date)) {
+                    return $promotion->value;
+                }
+            }
+        }
+
+        return $price->value;
     }
 
 }

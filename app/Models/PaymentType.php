@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderPayment extends Model
+class PaymentType extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'order_id',
-        'payment_type_id',
-        'value',
-    ];
+    public $incrementing = false;
+
+
 }

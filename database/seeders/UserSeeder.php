@@ -31,7 +31,6 @@ class UserSeeder extends Seeder
                     ->has(Waiter::factory()->count(10), 'waiters')
                     ->has(Card::factory()->count(20), 'cards')
                     ->has(Order::factory()
-                        ->has(OrderPayment::factory()->count(1), 'payment')
                         ->has(SubOrder::factory()->count(3), 'subOrders')
                         ->count(50), 'orders')
             ->count(2), 'stores')
