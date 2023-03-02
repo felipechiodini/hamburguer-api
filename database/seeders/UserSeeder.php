@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderPayment;
 use App\Models\Product;
+use App\Models\ProductPhoto;
 use App\Models\ProductPrice;
 use App\Models\SubOrder;
 use App\Models\User;
@@ -26,7 +27,7 @@ class UserSeeder extends Seeder
             ->has(
                 UserStore::factory()
                     ->has(Category::factory()->count(10), 'categories')
-                    ->has(Product::factory()->has(ProductPrice::factory()->count(1), 'prices')->count(30), 'products')
+                    ->has(Product::factory()->has(ProductPrice::factory()->count(1), 'prices')->has(ProductPhoto::factory()->count(3), 'photos')->count(30), 'products')
                     ->has(Customer::factory()->count(30), 'customers')
                     ->has(Waiter::factory()->count(10), 'waiters')
                     ->has(Card::factory()->count(20), 'cards')

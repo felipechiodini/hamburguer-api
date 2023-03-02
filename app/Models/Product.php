@@ -26,4 +26,14 @@ class Product extends Model
         return $this->hasMany(ProductPrice::class);
     }
 
+    public function additionals()
+    {
+        return $this->hasMany(ProductAdditional::class);
+    }
+
+    public function replacements()
+    {
+        return $this->hasMany(ProductReplacement::class);
+    }
+
 }

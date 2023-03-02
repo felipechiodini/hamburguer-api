@@ -178,6 +178,7 @@ return new class extends Migration
         Schema::create('product_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('product_id')->references('id')->on('products');
+            $table->string('src');
             $table->tinyInteger('order');
             $table->timestamps();
         });

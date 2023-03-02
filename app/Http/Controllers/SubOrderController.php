@@ -21,7 +21,7 @@ class SubOrderController extends Controller
             $modelProduct = Product::find($product['id']);
 
             $subOrder->products()->attach($product['id'], [
-                'value' => CalculatePriceProduct::product($modelProduct)->getCurrentPrice(),
+                'value' => CalculatePriceProduct::product($modelProduct)->additional($product['additionals'])->getPrice(),
                 'amount' => $product['amount']
             ]);
         }
