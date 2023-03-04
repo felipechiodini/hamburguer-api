@@ -15,7 +15,7 @@ class UserSubscriptionFactory extends Factory
         return [
             'plan_price_id' => $planPrice->id,
             'start_at' => now()->toDateTimeString(),
-            'expire_at' => now()->addMonths($planPrice->recurence)->toDateTimeString(),
+            'expire_at' => now()->addMonths($planPrice->recurrence)->toDateTimeString(),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Subscription\SubscriptionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,13 @@ class UserSubscription extends Model
     protected $fillable = [
         'user_id',
         'plan_price_id',
+        'canceled',
         'start_at',
         'expire_at'
+    ];
+
+    protected $casts = [
+        'canceled' => 'boolean'
     ];
 
     protected $appends = [
@@ -27,11 +33,8 @@ class UserSubscription extends Model
 
     public function getStatusAttribute()
     {
-        if (now()->isAfter($this->expire_at)) {
-            return 'expired';
-        } else if (now()->isAfter($this->start_at)) {
-            return 'active';
-        }
+        return SubscriptionStatus::subscription($this)
+            ->getStatus();
     }
 
 }

@@ -12,16 +12,8 @@ class StoreSchedule extends Model
     protected $fillalbe = [
         'week_day',
         'open_at',
-        'close_at'
-    ];
-
-    protected $appends = [
+        'close_at',
         'closed'
     ];
-
-    public function getClosedAttribute()
-    {
-        return $this->open_at === null && $this->close_at === null;
-    }
 
 }

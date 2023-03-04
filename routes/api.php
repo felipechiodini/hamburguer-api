@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('order', 'OrderController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
+Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');
 
 Route::fallback(function () {
     return response()->json(['message' => 'Serviço não encontrado!'], 404);

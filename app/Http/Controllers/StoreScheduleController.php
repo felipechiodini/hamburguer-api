@@ -18,6 +18,7 @@ class StoreScheduleController extends Controller
             StoreSchedule::updateOrCreate([
                 'week_day' => $schedule->week_day
             ],[
+                'closed' => $schedule->closed,
                 'open_at' => $schedule->open_at,
                 'close_at' => $schedule->close_at
             ]);
