@@ -31,8 +31,8 @@ return new class extends Migration
 
         Schema::create('combos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('combos_product_id_foreign');
             $table->string('name');
+            $table->float('price');
             $table->timestamps();
         });
 
@@ -175,6 +175,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('combo_has_products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('combo_id')->references('id')->on('combos');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->timestamps();
+        });
+
         Schema::create('product_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('product_id')->references('id')->on('products');
@@ -273,10 +280,6 @@ return new class extends Migration
 
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('combos', function (Blueprint $table) {
-            $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('customers', function (Blueprint $table) {
@@ -467,10 +470,6 @@ return new class extends Migration
 
         Schema::table('customers', function (Blueprint $table) {
             $table->dropForeign('customers_user_store_id_foreign');
-        });
-
-        Schema::table('combos', function (Blueprint $table) {
-            $table->dropForeign('combos_product_id_foreign');
         });
 
         Schema::table('categories', function (Blueprint $table) {
