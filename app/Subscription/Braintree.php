@@ -26,11 +26,24 @@ class Braintree {
         return $this->gateway()->customer()->create([
             'firstName' => $user['first_name'],
             'lastName' => $user['last_name'],
-            'email' => 'mike.jones@example.com',
-            'phone' => '281.330.8004',
-            'fax' => '419.555.1235',
-            'website' => 'http://example.com'
+            'email' => $user['email'],
+            'phone' => $user['cellphone'],
         ]);
+    }
+
+    public function subscribe($token, $planId)
+    {
+        return $this->gateway()->subscription()->create([
+            'paymentMethodToken' => $token,
+            'planId' => $planId
+        ]);
+    }
+
+    public function getCustomer($id)
+    {
+        return $this->gateway()
+            ->customer()
+            ->find($id);
     }
 
 }

@@ -27,6 +27,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'first_name',
+        'last_name'
+    ];
+
+    public function getFirstNameAttribute()
+    {
+        return explode(' ', $this->name)[0];
+    }
+
+    public function getLastNameAttribute()
+    {
+        return end(explode(' ', $this->name));
+    }
+
     public function subscription()
     {
         return $this->hasOne(UserSubscription::class);

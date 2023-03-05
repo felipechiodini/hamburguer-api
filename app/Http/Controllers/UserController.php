@@ -21,12 +21,13 @@ class UserController extends Controller
     public function subscribe(Request $request)
     {
         $request->validate([
+            'token' => 'required',
             'plan_price_id' => 'required'
         ]);
 
         Subsctiption::user(auth()->user())
             ->planPrice($request->plan_price_id)
-            ->subscribe();
+            ->subscribe($request->token);
 
         return response()->json(['message' => 'Sucesso ao assinar!']);
     }
