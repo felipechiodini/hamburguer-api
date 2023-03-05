@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('subscribe', 'UserController@subscribe');
+
+
 Route::apiResource('order', 'OrderController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
 Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');

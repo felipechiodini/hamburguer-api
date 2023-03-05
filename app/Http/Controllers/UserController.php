@@ -2,30 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Subscription\Subsctiption;
+use App\Models\User;
+use App\Subscription\Subscription;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
-    public function update(Request $request)
-    {
-        auth()->user()->update([
-            'name' => $request->name,
-            'email' => $request->email,
-        ]);
-
-        return response()->json(['message' => 'Salvo']);
-    }
-
     public function subscribe(Request $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'plan_price_id' => 'required'
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'cellphone' => $request->cellphone
         ]);
 
-        Subsctiption::user(auth()->user())
+        Subscription::user($user)
             ->planPrice($request->plan_price_id)
             ->subscribe($request->token);
 

@@ -2,11 +2,10 @@
 
 namespace App\Subscription;
 
-use App\Jobs\ProcessPayment;
 use App\Models\PlanPrice;
 use App\Models\User;
 
-class Subsctiption {
+class Subscription {
 
     private $user;
     private $planPrice;
@@ -27,7 +26,7 @@ class Subsctiption {
         return $this;
     }
 
-    public function subscribe($token, $planId)
+    public function subscribe($token)
     {
         $braintree = new Braintree();
 
@@ -38,7 +37,7 @@ class Subsctiption {
             'cellphone' => $this->user->cellphone,
         ]);
 
-        $response = $braintree->subscribe($token, $planId);
+        $response = $braintree->subscribe($token, 'silver_plan');
 
         if ($response->success === true) {
             $this->user->subscription()->create([
