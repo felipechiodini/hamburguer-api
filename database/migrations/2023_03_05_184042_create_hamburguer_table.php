@@ -1,6 +1,5 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -29,10 +28,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('combo_has_products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('combo_id')->index('combo_has_products_combo_id_foreign');
+            $table->unsignedBigInteger('product_id')->index('combo_has_products_product_id_foreign');
+            $table->timestamps();
+        });
+
         Schema::create('combos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->float('price');
+            $table->double('price', 8, 2);
             $table->timestamps();
         });
 
@@ -86,6 +92,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('tokenable_type');
+            $table->unsignedBigInteger('tokenable_id');
+            $table->string('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamps();
+
+            $table->index(['tokenable_type', 'tokenable_id']);
+        });
+
         Schema::create('plan_has_modules', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('plan_id')->index('plan_has_modules_plan_id_foreign');
@@ -114,6 +133,14 @@ return new class extends Migration
             $table->string('name');
             $table->double('value', 8, 2);
             $table->smallInteger('max');
+            $table->timestamps();
+        });
+
+        Schema::create('product_photos', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('product_id')->index('product_photos_product_id_foreign');
+            $table->string('src');
+            $table->tinyInteger('order');
             $table->timestamps();
         });
 
@@ -175,34 +202,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('combo_has_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('combo_id')->references('id')->on('combos');
-            $table->foreignId('product_id')->references('id')->on('products');
-            $table->timestamps();
-        });
-
-        Schema::create('product_photos', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('id')->on('products');
-            $table->string('src');
-            $table->tinyInteger('order');
-            $table->timestamps();
-        });
-
-        Schema::create('store_configurations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
-            $table->text('warning')->nullable();
-            $table->boolean('allow_withdrawal')->nullable();
-            $table->integer('withdrawal_time')->nullable();
-            $table->integer('delivery_time')->nullable();
-            $table->float('minimum_order_value')->nullable();
-            $table->timestamp('open_in')->nullable();
-            $table->timestamp('closed_in')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('store_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
@@ -214,10 +213,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('store_configurations', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->char('user_store_id', 36)->index('store_configurations_user_store_id_foreign');
+            $table->text('warning')->nullable();
+            $table->boolean('allow_withdrawal')->nullable();
+            $table->integer('withdrawal_time')->nullable();
+            $table->integer('delivery_time')->nullable();
+            $table->double('minimum_order_value', 8, 2)->nullable();
+            $table->timestamp('open_in')->nullable();
+            $table->timestamp('closed_in')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('store_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_schedules_user_store_id_foreign');
-            $table->set('week_day', [Carbon::SUNDAY, Carbon::MONDAY, Carbon::TUESDAY, Carbon::WEDNESDAY, Carbon::THURSDAY, Carbon::FRIDAY, Carbon::SATURDAY]);
+            $table->set('week_day', ['0', '1', '2', '3', '4', '5', '6']);
             $table->boolean('closed')->default(false);
             $table->time('open_at')->nullable();
             $table->time('close_at')->nullable();
@@ -285,6 +297,11 @@ return new class extends Migration
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
+        Schema::table('combo_has_products', function (Blueprint $table) {
+            $table->foreign(['combo_id'])->references(['id'])->on('combos')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        });
+
         Schema::table('customers', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
@@ -313,6 +330,10 @@ return new class extends Migration
         });
 
         Schema::table('product_additionals', function (Blueprint $table) {
+            $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+        });
+
+        Schema::table('product_photos', function (Blueprint $table) {
             $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
@@ -444,6 +465,10 @@ return new class extends Migration
             $table->dropForeign('product_price_promotions_product_price_id_foreign');
         });
 
+        Schema::table('product_photos', function (Blueprint $table) {
+            $table->dropForeign('product_photos_product_id_foreign');
+        });
+
         Schema::table('product_additionals', function (Blueprint $table) {
             $table->dropForeign('product_additionals_product_id_foreign');
         });
@@ -475,6 +500,11 @@ return new class extends Migration
             $table->dropForeign('customers_user_store_id_foreign');
         });
 
+        Schema::table('combo_has_products', function (Blueprint $table) {
+            $table->dropForeign('combo_has_products_combo_id_foreign');
+            $table->dropForeign('combo_has_products_product_id_foreign');
+        });
+
         Schema::table('categories', function (Blueprint $table) {
             $table->dropForeign('categories_user_store_id_foreign');
         });
@@ -499,6 +529,8 @@ return new class extends Migration
 
         Schema::dropIfExists('store_configurations');
 
+        Schema::dropIfExists('store_addresses');
+
         Schema::dropIfExists('products');
 
         Schema::dropIfExists('product_stocks');
@@ -512,6 +544,8 @@ return new class extends Migration
         Schema::dropIfExists('product_prices');
 
         Schema::dropIfExists('product_price_promotions');
+
+        Schema::dropIfExists('product_photos');
 
         Schema::dropIfExists('product_additionals');
 
@@ -536,6 +570,8 @@ return new class extends Migration
         Schema::dropIfExists('customers');
 
         Schema::dropIfExists('combos');
+
+        Schema::dropIfExists('combo_has_products');
 
         Schema::dropIfExists('categories');
 

@@ -14,13 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::prefix('auth')->group(function() {
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
-});
+Route::post('/auth/register', [AuthController::class, 'createUser']);
+Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::post('subscribe', 'UserController@subscribe');
 Route::apiResource('order', 'OrderController');
