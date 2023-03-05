@@ -31,8 +31,8 @@ return new class extends Migration
 
         Schema::create('combos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('combos_product_id_foreign');
             $table->string('name');
+            $table->float('price');
             $table->timestamps();
         });
 
@@ -97,7 +97,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('plan_id')->index('plan_prices_plan_id_foreign');
             $table->double('value');
-            $table->integer('recurence');
+            $table->integer('recurrence');
             $table->timestamps();
         });
 
@@ -175,6 +175,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('combo_has_products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('combo_id')->references('id')->on('combos');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->timestamps();
+        });
+
         Schema::create('product_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('product_id')->references('id')->on('products');
@@ -211,8 +218,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_schedules_user_store_id_foreign');
             $table->set('week_day', [Carbon::SUNDAY, Carbon::MONDAY, Carbon::TUESDAY, Carbon::WEDNESDAY, Carbon::THURSDAY, Carbon::FRIDAY, Carbon::SATURDAY]);
-            $table->timestamp('open_at')->nullable();
-            $table->timestamp('close_at')->nullable();
+            $table->boolean('closed')->default(false);
+            $table->time('open_at')->nullable();
+            $table->time('close_at')->nullable();
             $table->timestamps();
         });
 
@@ -244,8 +252,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->index('user_subscriptions_user_id_foreign');
             $table->unsignedBigInteger('plan_price_id')->index('user_subscriptions_plan_price_id_foreign');
-            $table->timestamp('start_at');
-            $table->timestamp('expire_at');
+            $table->boolean('canceled')->default(false);
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('expire_at')->nullable();
             $table->timestamps();
         });
 
@@ -255,6 +264,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('cellphone', 30);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -273,10 +283,6 @@ return new class extends Migration
 
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign(['user_store_id'])->references(['id'])->on('user_stores')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-        });
-
-        Schema::table('combos', function (Blueprint $table) {
-            $table->foreign(['product_id'])->references(['id'])->on('products')->onUpdate('NO ACTION')->onDelete('NO ACTION');
         });
 
         Schema::table('customers', function (Blueprint $table) {
@@ -467,10 +473,6 @@ return new class extends Migration
 
         Schema::table('customers', function (Blueprint $table) {
             $table->dropForeign('customers_user_store_id_foreign');
-        });
-
-        Schema::table('combos', function (Blueprint $table) {
-            $table->dropForeign('combos_product_id_foreign');
         });
 
         Schema::table('categories', function (Blueprint $table) {

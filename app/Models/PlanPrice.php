@@ -12,7 +12,7 @@ class PlanPrice extends Model
     protected $fillable = [
         'plan_id',
         'value',
-        'recurence',
+        'recurrence',
     ];
 
     public function plan()

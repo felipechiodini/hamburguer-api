@@ -22,8 +22,10 @@ Route::prefix('auth')->group(function() {
     Route::post('me', 'AuthController@me');
 });
 
+Route::post('subscribe', 'UserController@subscribe');
 Route::apiResource('order', 'OrderController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
+Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');
 
 Route::fallback(function () {
     return response()->json(['message' => 'Serviço não encontrado!'], 404);
