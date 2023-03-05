@@ -13,7 +13,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => 'felipechiodinibona@hotmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('132567'),
             'remember_token' => Str::random(10),

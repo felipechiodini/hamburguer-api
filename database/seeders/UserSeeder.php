@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::factory()
-            ->count(5)
+            ->count(1)
             ->has(
                 UserStore::factory()
                     ->has(Category::factory()->count(10), 'categories')
@@ -31,9 +31,9 @@ class UserSeeder extends Seeder
                     ->has(Customer::factory()->count(30), 'customers')
                     ->has(Waiter::factory()->count(10), 'waiters')
                     ->has(Card::factory()->count(20), 'cards')
-                    ->has(Order::factory()
-                        ->has(SubOrder::factory()->count(3), 'subOrders')
-                        ->count(50), 'orders')
+                    // ->has(Order::factory()
+                    //     ->has(SubOrder::factory()->count(3), 'subOrders')
+                    //     ->count(50), 'orders')
             ->count(2), 'stores')
             ->has(UserSubscription::factory()->count(1), 'subscription')
             ->create();

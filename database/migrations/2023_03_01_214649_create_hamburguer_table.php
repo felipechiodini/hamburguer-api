@@ -222,7 +222,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index('sub_order_has_products_product_id_foreign');
             $table->double('value', 8, 2);
             $table->smallInteger('amount');
-            $table->text('observation');
+            $table->text('observation')->nullable();
             $table->timestamps();
         });
 

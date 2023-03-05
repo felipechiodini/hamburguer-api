@@ -3,6 +3,7 @@
 namespace App\Product;
 
 use App\Models\Product;
+use Exception;
 
 class CalculatePriceProduct {
 
@@ -45,6 +46,8 @@ class CalculatePriceProduct {
         $additional = $this->product
             ->additionals
             ->find($additionals);
+
+        if (!$additional) throw new Exception("Error Processing Request");
 
         $additional->times = $times;
 
