@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('braintree/token',  'BraintreeController@token');
+
 Route::post('/auth/register',  'AuthController@createUser');
 Route::post('/auth/login',  'AuthController@loginUser');
 Route::post('subscribe', 'UserController@subscribe');

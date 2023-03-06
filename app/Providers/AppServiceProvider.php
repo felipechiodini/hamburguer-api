@@ -12,12 +12,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function register()
     {
-        Sanctum::ignoreMigrations();
+        // Sanctum::ignoreMigrations();
     }
 
     public function boot()
     {
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        // Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
     }
 
 }
