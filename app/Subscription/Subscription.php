@@ -4,6 +4,7 @@ namespace App\Subscription;
 
 use App\Models\PlanPrice;
 use App\Models\User;
+use Exception;
 
 class Subscription {
 
@@ -30,22 +31,26 @@ class Subscription {
     {
         $braintree = new Braintree();
 
-        $response = $braintree->registerCustomer([
-            'first_name' => $this->user->first_name,
-            'last_name' => $this->user->last_name,
+        $response = $braintree->gateway()->customer()->create([
+            'firstName' =>  $this->user->first_name,
+            'lastName' => $this->user->last_name,
             'email' => $this->user->email,
-            'cellphone' => $this->user->cellphone,
+            'paymentMethodNonce'=> $token
         ]);
 
-        $response = $braintree->subscribe($token, 'silver_plan');
-
         if ($response->success === true) {
-            $this->user->subscription()->create([
-                'plan_price_id' => $this->planPrice->id,
-                'start_at' => now()->toDateTimeString(),
-                'expire_at' => now()->addMonths($this->planPrice->recurrence)->toDateTimeString()
-            ]);
+            $response = $braintree->subscribe($response->paymentMethods[0]->token, $this->planPrice->plan->braintree_id);
+
+            if ($response->success === true) {
+                $this->user->subscription()->create([
+                    'plan_price_id' => $this->planPrice->id,
+                    'start_at' => now()->toDateTimeString(),
+                    'expire_at' => now()->addMonths($this->planPrice->recurrence)->toDateTimeString()
+                ]);
+            }
         }
+
+        throw new Exception('Falha ao tentar assinar');
     }
 
 }

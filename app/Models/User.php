@@ -15,7 +15,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'cellphone',
+        'password'
     ];
 
     protected $hidden = [
@@ -49,7 +50,8 @@ class User extends Authenticatable
 
     public function getLastNameAttribute()
     {
-        return end(explode(' ', $this->name));
+        $names = explode(' ', $this->name);
+        return $names[count($names) - 1];
     }
 
     public function subscription()

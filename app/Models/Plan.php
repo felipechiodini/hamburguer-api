@@ -11,7 +11,8 @@ class Plan extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'braintree_id'
     ];
 
     public function planPrice()

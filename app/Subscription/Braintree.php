@@ -21,16 +21,6 @@ class Braintree {
             ->generate();
     }
 
-    public function registerCustomer($user)
-    {
-        return $this->gateway()->customer()->create([
-            'firstName' => $user['first_name'],
-            'lastName' => $user['last_name'],
-            'email' => $user['email'],
-            'phone' => $user['cellphone'],
-        ]);
-    }
-
     public function subscribe($token, $planId)
     {
         return $this->gateway()->subscription()->create([

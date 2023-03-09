@@ -12,9 +12,9 @@ class PlanSeeder extends Seeder
 
     public function run()
     {
-        $basic = Plan::create(['name' => 'Básico', 'description' => Lorem::paragraph()]);
-        $advanced = Plan::create(['name' => 'Avançado', 'description' => Lorem::paragraph()]);
-        $pro = Plan::create(['name' => 'Pro', 'description' => Lorem::paragraph()]);
+        $basic = Plan::create(['name' => 'Básico', 'description' => Lorem::paragraph(), 'braintree_id' => 'basic_plan']);
+        $advanced = Plan::create(['name' => 'Avançado', 'description' => Lorem::paragraph(), 'braintree_id' => 'basic_plan']);
+        $pro = Plan::create(['name' => 'Pro', 'description' => Lorem::paragraph(), 'braintree_id' => 'basic_plan']);
 
         $basic->modules()->attach(range(1,10));
         $advanced->modules()->attach(range(1,10));
