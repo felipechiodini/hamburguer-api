@@ -8,7 +8,7 @@ class WaiterRepository
 {
     public function getAllWaiters()
     {
-        return Waiter::store(request()->header('X-store-uuid'))->all();
+        return Waiter::store(request()->header(UserStore::HEADER_KEY))->all();
     }
 
     public function getWaiterById($WaiterId)

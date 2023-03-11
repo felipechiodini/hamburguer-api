@@ -9,7 +9,7 @@ class UserStore extends Model
 {
     use HasFactory;
 
-    public const HEADER_KEY = 'X-store-uuid';
+    public const HEADER_KEY = UserStore::HEADER_KEY;
 
     public $incrementing = false;
 

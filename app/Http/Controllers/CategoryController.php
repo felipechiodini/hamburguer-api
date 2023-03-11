@@ -19,7 +19,9 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
 
-        return response()->json(Category::create($request->only('name')));
+        $category = Category::create($request->only('name'));
+
+        return response()->json(['message' => $category]);
     }
 
 }

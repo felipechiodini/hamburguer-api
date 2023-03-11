@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\UserStore;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -16,7 +17,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $product = Product::create([
-            'user_store_id' => $request->header('x-store-uuid'),
+            'user_store_id' => $request->header(UserStore::HEADER_KEY),
             'name' => $request->name,
             'description' => $request->description
         ]);

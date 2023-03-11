@@ -21,6 +21,8 @@ Route::apiResource('order', 'OrderController');
 Route::apiResource('product', 'ProductController');
 Route::apiResource('product/{product}/price', 'ProductPriceController');
 Route::apiResource('product/{product}/replacement', 'ProductReplacementController');
+Route::apiResource('combo', 'ComboController');
+Route::apiResource('combo/{combo}/product', 'ComboProductController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
 Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');
 

@@ -16,16 +16,14 @@ class ComboController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name',
-            'products'
+            'name'
         ]);
 
         $combo = Combo::create([
             'name' => $request->name
         ]);
 
-        $combo->products()->attach($request->products);
-
-        return response()->json(['message' => 'Sucesso!']);
+        return response()->json(['message' => 'Combo criado com sucesso!'], 201);
     }
+
 }
