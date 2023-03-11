@@ -13,7 +13,15 @@ class Dashboards extends Migration
      */
     public function up()
     {
-        //
+
+        Schema::create('dashboards', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignUuid('user_store_id')->references('id')->on('user_stores');
+            $table->enum('key', ['general', 'waiters']);
+            $table->json('config');
+            $table->timestamps();
+        });
+
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\UserStore;
 use App\Models\Waiter;
 
 class WaiterRepository
