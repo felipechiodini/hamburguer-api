@@ -200,6 +200,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->index('products_category_id_foreign');
             $table->string('name');
             $table->text('description');
+            $table->softDeletes();
             $table->timestamps();
         });
 

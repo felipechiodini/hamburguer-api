@@ -18,6 +18,9 @@ Route::get('braintree/token',  'BraintreeController@token');
 
 Route::post('subscribe', 'UserController@subscribe');
 Route::apiResource('order', 'OrderController');
+Route::apiResource('product', 'ProductController');
+Route::apiResource('product/{product}/price', 'ProductPriceController');
+Route::apiResource('product/{product}/replacement', 'ProductReplacementController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
 Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');
 
