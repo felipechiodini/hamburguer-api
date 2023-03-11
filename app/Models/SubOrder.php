@@ -24,4 +24,15 @@ class SubOrder extends Model
         return $this->belongsToMany(Product::class, 'sub_order_has_products')->withPivot(['value', 'amount']);
     }
 
+    public function total()
+    {
+        $total = 0;
+
+        foreach ($this->products as $product) {
+            $total = $total + ($product->pivot->value * $product->pivot->amount);
+        }
+
+        return $total;
+    }
+
 }

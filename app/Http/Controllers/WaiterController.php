@@ -28,4 +28,15 @@ class WaiterController extends Controller
         return response()->json(['message' => 'Garçom registrado com sucesso', 'waiter' => $waiter]);
     }
 
+    public function show(Waiter $waiter)
+    {
+        return response()->json($waiter);
+    }
+
+    public function destroy(Waiter $waiter)
+    {
+        $waiter->delete();
+        return response()->json(['message' => 'Garçom inativado']);
+    }
+
 }

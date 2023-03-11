@@ -81,7 +81,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('orders_user_store_id_foreign');
             $table->unsignedBigInteger('store_card_id')->nullable()->index('orders_store_card_id_foreign');
-            $table->enum('type', ['withdrawal', 'delivery']);
+            $table->enum('type', ['withdrawal', 'delivery', 'on_site']);
             $table->enum('status', ['pending', 'aceppted', 'delivered', 'canceled'])->default('pending');
             $table->timestamps();
         });
@@ -288,6 +288,7 @@ return new class extends Migration
             $table->char('user_store_id', 36)->index('waiters_user_store_id_foreign');
             $table->boolean('active')->default(true);
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
 
