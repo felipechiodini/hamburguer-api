@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\StoreSchedule;
+use App\Models\UserStore;
 use Illuminate\Http\Request;
 
 class StoreScheduleController extends Controller
 {
 
+    public function index(Request $request)
+    {
+        $schedules = StoreSchedule::where('user_store_id', $request->header(UserStore::HEADER_KEY))
+            ->get();
+
+        return response()->json($schedules);
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'schedules' => 'required|array'
-        ]);
-
-        foreach ($request->input('schedules') as $schedule) {
+        foreach ($request->all() as $schedule) {
             StoreSchedule::updateOrCreate([
                 'week_day' => $schedule->week_day
             ],[

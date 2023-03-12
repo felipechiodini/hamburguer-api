@@ -9,10 +9,18 @@ use Illuminate\Http\Request;
 class StoreAddressController extends Controller
 {
 
-    public function insert(UserStore $userStore, Request $request)
+    public function get(Request $request)
+    {
+        $address = StoreAddress::where('user_store_id', $request->header(UserStore::HEADER_KEY))
+            ->first();
+
+        return response()->json($address);
+    }
+
+    public function updateOrCreate(Request $request)
     {
         StoreAddress::updateOrCreate([
-            'user_store_id' => $userStore->id,
+            'user_store_id' => $request->header(UserStore::HEADER_KEY),
         ], [
             'street' => $request->street,
             'number' => $request->number,

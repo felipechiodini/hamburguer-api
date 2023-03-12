@@ -231,7 +231,7 @@ return new class extends Migration
         Schema::create('store_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('user_store_id', 36)->index('store_schedules_user_store_id_foreign');
-            $table->set('week_day', ['0', '1', '2', '3', '4', '5', '6']);
+            $table->string('week_day');
             $table->boolean('closed')->default(false);
             $table->time('open_at')->nullable();
             $table->time('close_at')->nullable();

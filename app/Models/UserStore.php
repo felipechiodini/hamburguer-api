@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,6 +50,17 @@ class UserStore extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function isOpen()
+    {
+        $storeSchedule = StoreSchedule::where('week_day', now()->dayOfWeek)
+            ->where('user_store_id', $this->id)
+            ->first();
+
+        if ($storeSchedule->closed === true) return false;
+        if (now()->isBetween($storeSchedule->open_at, $storeSchedule->close_at)) return true;
+        return false;
     }
 
 }

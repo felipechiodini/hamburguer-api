@@ -16,16 +16,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('braintree/token',  'BraintreeController@token');
 
+Route::get('home', 'HomeController@get');
+Route::get('address', 'StoreAddressController@get');
+Route::post('address', 'StoreAddressController@updateOrCreate');
 Route::post('subscribe', 'UserController@subscribe');
 Route::apiResource('order', 'OrderController');
 Route::apiResource('product', 'ProductController');
 Route::apiResource('product/{product}/price', 'ProductPriceController');
 Route::apiResource('product/{product}/replacement', 'ProductReplacementController');
 Route::apiResource('combo', 'ComboController');
+Route::apiResource('card', 'CardController');
 Route::apiResource('waiter', 'WaiterController');
+Route::apiResource('schedule', 'StoreScheduleController');
 Route::apiResource('combo/{combo}/product', 'ComboProductController');
 Route::apiResource('order/{order}/sub-order', 'SubOrderController');
-Route::apiResource('order/{order}/sub-order', 'StoreScheduleController');
 
 Route::fallback(function () {
     return response()->json(['message' => 'Serviço não encontrado!'], 404);

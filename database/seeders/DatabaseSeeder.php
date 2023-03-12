@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             PlanSeeder::class,
             PaymentTypeSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            StoreScheduleSeeder::class,
+            StoreAddressSeeder::class
         ]);
     }
 

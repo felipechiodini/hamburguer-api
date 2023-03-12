@@ -10,7 +10,7 @@ class ComboController extends Controller
 
     public function index()
     {
-        return response()->json(Combo::all());
+        return response()->json(Combo::paginate(20));
     }
 
     public function store(Request $request)

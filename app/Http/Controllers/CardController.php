@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 class CardController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
-        return response()->json();
+        return response()->json(Card::paginate(20));
     }
 
     public function store(Request $request)
@@ -22,7 +22,7 @@ class CardController extends Controller
 
         $card = Card::create([
             'store_id' => $request->header(UserStore::HEADER_KEY),
-            'number' => $request->number,
+            'number' => $request->number
         ]);
 
         return response()->json(['message' => 'Criado com sucesso!', 'card' => $card]);
