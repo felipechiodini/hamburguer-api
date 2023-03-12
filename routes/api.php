@@ -17,13 +17,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('braintree/token',  'BraintreeController@token');
 
 Route::get('home', 'HomeController@get');
+Route::get('configuration', 'StoreConfigurationController@get');
+Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
 Route::get('address', 'StoreAddressController@get');
 Route::post('address', 'StoreAddressController@updateOrCreate');
 Route::post('subscribe', 'UserController@subscribe');
+Route::apiResource('category', 'CategoryController');
 Route::apiResource('order', 'OrderController');
 Route::apiResource('product', 'ProductController');
 Route::apiResource('product/{product}/price', 'ProductPriceController');
 Route::apiResource('product/{product}/replacement', 'ProductReplacementController');
+Route::apiResource('product/{product}/additionals', 'ProductAdditionalController');
 Route::apiResource('combo', 'ComboController');
 Route::apiResource('card', 'CardController');
 Route::apiResource('waiter', 'WaiterController');

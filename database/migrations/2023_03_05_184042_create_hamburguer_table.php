@@ -223,8 +223,6 @@ return new class extends Migration
             $table->integer('withdrawal_time')->nullable();
             $table->integer('delivery_time')->nullable();
             $table->double('minimum_order_value', 8, 2)->nullable();
-            $table->timestamp('open_in')->nullable();
-            $table->timestamp('closed_in')->nullable();
             $table->timestamps();
         });
 

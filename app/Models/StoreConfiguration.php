@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StoreConfiguration extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
+        'user_store_id',
         'warning',
-        'allow_withdrawal'
+        'allow_withdrawal',
+        'withdrawal_time',
+        'delivery_time',
+        'minimum_order_value',
     ];
 
 }
