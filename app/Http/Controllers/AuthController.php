@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 
+    public function me()
+    {
+        $user = User::find(auth()->user()->id);
+
+        $user->with('subscription');
+
+        return response()->json($user);
+    }
+
     public function createUser(Request $request)
     {
         try {

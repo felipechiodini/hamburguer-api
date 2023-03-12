@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('braintree/token',  'BraintreeController@token');
 
+Route::prefix('auth', function() {
+    Route::get('me', 'AuthController@me');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('login', 'AuthController@login');
+});
+
 Route::get('home', 'HomeController@get');
 Route::get('configuration', 'StoreConfigurationController@get');
 Route::post('configuration', 'StoreConfigurationController@updateOrCreate');
